@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Поиск маршрута</title>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+</head>
+<body>
+	<h2>Поиск маршрута</h2>
+	<form name="mForm">
+		<div>
+			<label for="name">Код аэропорта отправки:</label>
+			<input name="srcAirport" />
+		</div>
+		<div>
+			<label for="age">Код аэропорта прибытия:</label>
+			<input name="destAirport" />
+		</div>
+		<div>
+			<button type="submit">Поиск маршрута</button>
+		</div>
+	</form>
+	<br />
+	<h3 name="route"></h3>
+
+	<script>
+        // Получение всех пользователей
+        function GetRoute(A, B) {
+            $.ajax({
+                url: '/api/route',
+                type: 'POST',
+				contentType: "application/json",
+				data: JSON.stringify({
+					srcAirport: A,
+					destAirport: B
+				}),
+				success: function (result) {
+					if (result.success == true)
+						$("h3").html("Маршрут: " + result.route);
+					else
+						$("h3").html("Ошибка: " + result.error);
+                 }
+            });
+        }
+ 
+        // отправка формы
+        $("form").submit(function (e) {
+            e.preventDefault();
+			var a = this.elements["srcAirport"].value;
+			var b = this.elements["destAirport"].value;
+            GetRoute(a, b);
+        });
+ 
+	</script>
+</body>
+</html>
